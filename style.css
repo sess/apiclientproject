@@ -24,8 +24,12 @@ button:focus{
     font-size:50px;
 }*/
 
-.cardCountCont{
+.text{
     float:left;
+}
+
+.cardCountCont{
+    float:right;
 }
 
 .hands{
@@ -36,7 +40,7 @@ button:focus{
     width:100%;
 }
 
-#playerCards{
+.playerCards{
      cursor:pointer;
 }
 
@@ -73,4 +77,9 @@ button:focus{
     height:100px;
     width:75px;
     margin:10px;
+    cursor:pointer;
+}
+
+#deck{
+    cursor:pointer;
 }
