@@ -4,6 +4,8 @@ let currentTurn = "player";
 
 let currentCard = "none";
 
+let selectedCard = "none";
+
 let previousTurn = "computer";
 
 let compMatches = 0;
@@ -16,7 +18,7 @@ let playerText = "Player's Turn";
 
 let comText = "Computer's Turn";
 
-let drawText = "Draw a Card";
+let drawText = "Go Fish";
 
 $(".text").text(playerText);
 
@@ -33,38 +35,55 @@ function turns(){
     }
 }
 
-function click(selected){
-    currentCard = selected;
+function calledCard(selected,index){
     $(selected).click(function(){
-        console.log("click");
+        currentCard = index;
+        console.log("PL " + currentCard);
     });
 }
 
-function clickTwo(selected){
+
+function select(selected,index){
     $(selected).click(function(){
-        console.log("clickTwo");
+        selectedCard = index;
+        console.log("COM " + selectedCard);
     });
 }
 
-function playerCardSelect(){
-    click("#playerCard0");
-    click("#playerCard1");
-    click("#playerCard2");
-    click("#playerCard3");
-    click("#playerCard4");
+let playerSelect = function(){
+    select("#opponentCard0", comCards[0]);
+    select("#opponentCard1", comCards[1]);
+    select("#opponentCard2", comCards[2]);
+    select("#opponentCard3", comCards[3]);
+    select("#opponentCard4", comCards[4]);
 }
 
-function opponentCardSelect(){
-    clickTwo("#opponentCard0");
-    clickTwo("#opponentCard1");
-    clickTwo("#opponentCard2");
-    clickTwo("#opponentCard3");
-    clickTwo("#opponentCard4"); 
+let playerCall = function (){
+    calledCard("#playerCard0",playerCards[0]);
+    calledCard("#playerCard1", playerCards[1]);
+    calledCard("#playerCard2", playerCards[2]);
+    calledCard("#playerCard3", playerCards[3]);
+    calledCard("#playerCard4", playerCards[4]);
 }
 
-function changeCurrentCard(value){
-    currentCard = value;
-}
+playerSelect();
+playerCall();
+
+/*function clickTwo(selected, index){
+    $(selected).click(function(){
+       //console.log("clickTwo");
+        currentCard = index;
+        console.log(currentCard);
+    });
+}*/
+
+/*function opponentCardSelect(){
+    clickTwo("#opponentCard0", comCards[0]);
+    clickTwo("#opponentCard1", comCards[1]);
+    clickTwo("#opponentCard2", comCards[2]);
+    clickTwo("#opponentCard3", comCards[3]);
+    clickTwo("#opponentCard4", comCards[4]); 
+}*/
 
 $.ajax({
     url: "https://deckofcardsapi.com/api/deck/k6md5slc2b2s/shuffle/?deck_count=1",
@@ -83,16 +102,11 @@ $.ajax({
                     $(".cardCount").text(response.remaining);
                     console.log("playerHand");
                     console.log(response.cards[i].value);
-                }        
-                playerCards.push(response.cards[0].value);
-                playerCards.push(response.cards[1].value);
-                playerCards.push(response.cards[2].value);
-                playerCards.push(response.cards[3].value);
-                playerCards.push(response.cards[4].value);
-                playerCardSelect();
-                changeCurrentCard();
-                /*currentCard = response.cards[0].value;
-                console.log(currentCard);*/
+                    //$("#appendedScript").append("$(\"#playerCard" + i + "\"" + ").click(function(){ currentCard = $(\"#playerCard" + i + "\"" + ").val(); console.log(currentCard); });");
+                    playerCards.push(response.cards[i].value);
+                }       
+                playerSelect();
+                playerCall();
             }
         });
     
@@ -105,32 +119,25 @@ $.ajax({
                     $(".cardCount").text(response.remaining);
                     console.log("comHand");
                     console.log(response.cards[q].value);
+                    comCards.push(response.cards[q].value);
                 }        
-                comCards.push(response.cards[0].value);
-                comCards.push(response.cards[1].value);
-                comCards.push(response.cards[2].value);
-                comCards.push(response.cards[3].value);
-                comCards.push(response.cards[4].value);
-                opponentCardSelect();
+                //opponentCardSelect();
             }
         });
     }
 });
 
-console.log(playerCards);
-console.log(comCards);
-
 $(".opponentCards").click(function(){
-    if(text === playerText){
+    /*if(text === playerText){
         
         turns();
     }else if(text === drawText){
         alert("Those aren't your cards.");
-    }
+    }*/
 });
 
 $("#deck").click(function(){
-    if(text != drawText){
+    if(text != comText){
         alert("You can't draw a card at this time.");
     }else if(text === drawText && $(".cardCount").val() > 0){
     $.ajax({
@@ -141,11 +148,28 @@ $("#deck").click(function(){
                     console.log(i);
                     $("#playerHand").append("<img val='" + response.cards[i].value +"' class=\"cards\" class=\"playerCards\" id='playerCard" + i + "' src=\"" + response.cards[i].images.png + "\">");
                     $(".cardCount").text(response.remaining);
+                    playerCall = function(){
+                        calledCard("#playerCard0",playerCards[0]);
+                        calledCard("#playerCard1", playerCards[1]);
+                        calledCard("#playerCard2", playerCards[2]);
+                        calledCard("#playerCard3", playerCards[3]);
+                        calledCard("#playerCard4", playerCards[4]);
+                        calledCard("#playerCard" + i, playerCards[i]);
+                    }
                 }
                 playerCards.push(response.cards[0].code);
             }
         });
     }else if($(".cardCount").val() <= 0){
         alert("There are no more cards in the deck.");
+        if(currentTurn === "player"){
+            text = playerText;
+        }else if(currentTurn === "computer"){
+            text = comText;
+        }
     }
 });
+
+if(win === "true"){
+    alert("The game has been won");
+}

@@ -3,11 +3,15 @@
     <head>
         <link rel="stylesheet" type="text/css" href="style.css">
         <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js" id="appendedScript">
+            /* global $ */
+                 $("span").click(function(){
+                    console.log("testClick");
+                });
+                console.log("html JS test");
+        </script>
     </head>
     <body>
-        <!--<div class="overlay">
-            Click to Start
-        </div>-->
         <span class="text"></span>
         <span class="cardCountCont">Cards In Deck: <span class="cardCount"></span></span>
         
@@ -33,6 +37,6 @@
         </div>
         
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-        <script src="script.js"></script>
+        <script src="script.js"></script> 
     </body>
 </html>
